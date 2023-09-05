@@ -1,35 +1,50 @@
 import requests
-class City:
+
+class CityWeather:
     def __init__(self, name, lat, lon, units="metric"):
         self.name = name
         self.lat = lat
         self.lon = lon
         self.units = units
-        self.get_data()
-        
-    def get_data(self):
-        response = requests.get(f"https://api.openweathermap.org/data/2.5/weather?units={self.units}&lat={self.lat}&lon={self.lon}&appid=2c65a30ab78b9e5141f394914e138dac")
-        
-        self.response_json = response.json()
-        self.temp =self.response_json["main"]["temp"]
-        self.temp_min =self.response_json["main"]["temp_min"]
-        self.temp_max =self.response_json["main"]["temp_max"]
-        
-    def temp_print(self):
-        print(f' the current temp in {self.name} is {self.temp}° c')
-        print(f' the min temp  is {self.temp_min}° c')
-        print(f' the max temp  is {self.temp_max}° c')
-        
-my_city = City("london", 51.509865, -0.118092)      
-my_city.temp_print()   
+        self.weather_data = None
+        self.fetch_weather_data()  # Fetch weather data when an instance is created.
 
-vacation_city = City("kilifi", -3.563, 39.644)
-vacation_city.temp_print()
-print(vacation_city.response_json)
- the current temp in london is 12.74° c
- the min temp  is 11.27° c
- the max temp  is 13.6° c
- the current temp in kilifi is 25.92° c
- the min temp  is 25.92° c
- the max temp  is 25.92° c
-{'coord': {'lon': 39.644, 'lat': -3.563}, 'weather': [{'id': 804, 'main': 'Clouds', 'description': 'overcast clouds', 'icon': '04n'}], 'base': 'stations', 'main': {'temp': 25.92, 'feels_like': 26.73, 'temp_min': 25.92, 'temp_max': 25.92, 'pressure': 1010, 'humidity': 83, 'sea_level': 1010, 'grnd_level': 989}, 'visibility': 10000, 'wind': {'speed': 5.26, 'deg': 154, 'gust': 9.64}, 'clouds': {'all': 99}, 'dt': 1679505258, 'sys': {'country': 'KE', 'sunrise': 1679455513, 'sunset': 1679499098}, 'timezone': 10800, 'id': 192067, 'name': 'Kilifi', 'cod': 200}
+    def fetch_weather_data(self):
+        try:
+            url = f"https://api.openweathermap.org/data/2.5/weather"
+            params = {
+                "units": self.units,
+                "lat": self.lat,
+                "lon": self.lon,
+                "appid": "2c65a30ab78b9e5141f394914e138dac"
+            }
+            response = requests.get(url, params=params)
+
+            if response.status_code == 200:
+                self.weather_data = response.json()  # Store weather data as JSON.
+            else:
+                print("Failed to fetch weather data. Please check your coordinates and API key.")
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
+
+    def print_weather_info(self):
+        if self.weather_data:
+            main_data = self.weather_data.get("main", {})
+            temperature = main_data.get("temp")
+            temp_min = main_data.get("temp_min")
+            temp_max = main_data.get("temp_max")
+
+            print(f"Weather in {self.name}:")
+            print(f"- Temperature: {temperature}°C")
+            print(f"- Min Temperature: {temp_min}°C")
+            print(f"- Max Temperature: {temp_max}°C")
+        else:
+            print("Weather data is not available.")
+
+# Example usage:
+if __name__ == "__main__":
+    london = CityWeather("London", 51.509865, -0.118092)
+    london.print_weather_info()  # Print weather information for London.
+
+    kilifi = CityWeather("Kilifi", -3.563, 39.644)
+    kilifi.print_weather_info()  # Print weather information for Kilifi.
