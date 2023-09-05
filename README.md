@@ -1,8 +1,35 @@
-# project
-This is a Python code that defines a class named City that gets data about the current weather in a city using the OpenWeatherMap API. The class has a constructor method (__init__) that takes in the name of the city, its latitude and longitude, and optionally the units of temperature to use. The default unit is metric.
+# City Weather
 
-When a City object is created, it automatically calls the get_data method, which sends a GET request to the OpenWeatherMap API using the provided latitude and longitude to obtain information about the current weather in the specified city. The response is then converted to JSON and stored in an attribute of the City object named response_json.
+City Weather is a Python program that allows you to fetch and display weather information for specific cities using the OpenWeatherMap API.
 
-The get_data method also extracts the temperature, minimum temperature, and maximum temperature from the response JSON and stores them as attributes of the City object.
+## Features
 
-Finally, the City class defines a method named temp_print that prints out the current temperature, minimum temperature, and maximum temperature of the city.
+- Retrieve real-time weather data for cities.
+- Display current temperature, minimum temperature, and maximum temperature in Celsius (°C).
+- User-friendly and informative output.
+- Built-in error handling for network issues.
+
+## Usage
+
+1. **Installation**
+
+   - Clone the repository to your local machine:
+
+     ```bash
+     git clone https://github.com/your-username/city-weather.git
+     ```
+
+   - Navigate to the project directory:
+
+     ```bash
+     cd city-weather
+     ```
+
+2. **Fetch Weather Data**
+
+   To fetch weather data for a city, create an instance of the `CityWeather` class and provide the city name, latitude, and longitude as arguments:
+
+   ```python
+   from city_weather import CityWeather
+
+   city = CityWeather("City Name", latitude, longitude)
