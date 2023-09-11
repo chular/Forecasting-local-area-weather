@@ -27,5 +27,12 @@ Before you can use this script, you'll need the following:
 
 Here's an example of how to use the script:
 
+Enter the city for which you want to get weather information: New York
+Weather information for New York:
+Temperature: 25.0°C
+Humidity: 60%
+Wind speed: 4.6 m/s
+Weather description: Partly cloudy
+
 
 
