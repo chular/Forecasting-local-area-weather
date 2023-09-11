@@ -41,4 +41,17 @@ Wind speed: 4.6 m/s\
 Weather description: Partly cloudy
 
 
+## Troubleshooting
+
+- If you encounter any issues with the script or have questions, feel free to open an issue in this repository.
+
+## License
+
+This project is currently not licensed under any specific license. It is for personal use and may not be used or distributed without the owner's permission.
+
+Please contact the project owner if you have any questions regarding the usage or distribution of this code.
+
+
+
+
 
