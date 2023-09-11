@@ -1,35 +1,17 @@
-# City Weather
+# Weather Data Retrieval Script
 
-City Weather is a Python program that allows you to fetch and display weather information for specific cities using the OpenWeatherMap API.
+This Python script retrieves current weather data for a specified location using the OpenWeatherMap API. It prompts the user to enter a city, and then it provides information such as temperature, humidity, wind speed, and weather description for that city.
 
-## Features
+## Prerequisites
 
-- Retrieve real-time weather data for cities.
-- Display current temperature, minimum temperature, and maximum temperature in Celsius (°C).
-- User-friendly and informative output.
-- Built-in error handling for network issues.
+Before you can use this script, you'll need the following:
+
+- Python installed on your computer (you can download it from [python.org](https://www.python.org/downloads/)).
+- An OpenWeatherMap API key. You can obtain one by signing up at [OpenWeatherMap](https://openweathermap.org/api).
 
 ## Usage
 
-1. **Installation**
+1. Clone this repository to your local machine or download the script (`weather.py`) to your computer.
 
-   - Clone the repository to your local machine:
+2. Install the required Python packages using pip:
 
-     ```bash
-     git clone https://github.com/your-username/city-weather.git
-     ```
-
-   - Navigate to the project directory:
-
-     ```bash
-     cd city-weather
-     ```
-
-2. **Fetch Weather Data**
-
-   To fetch weather data for a city, create an instance of the `CityWeather` class and provide the city name, latitude, and longitude as arguments:
-
-   ```python
-   from city_weather import CityWeather
-
-   city = CityWeather("City Name", latitude, longitude)
