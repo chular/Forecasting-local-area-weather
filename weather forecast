@@ -1,50 +1,30 @@
-import requests
+import pyowm
 
-class CityWeather:
-    def __init__(self, name, lat, lon, units="metric"):
-        self.name = name
-        self.lat = lat
-        self.lon = lon
-        self.units = units
-        self.weather_data = None
-        self.fetch_weather_data()  # Fetch weather data when an instance is created.
+# Replace "YOUR_API_KEY" with your actual OpenWeatherMap API key
+owm = pyowm.OWM("YOUR_API_KEY")
 
-    def fetch_weather_data(self):
-        try:
-            url = f"https://api.openweathermap.org/data/2.5/weather"
-            params = {
-                "units": self.units,
-                "lat": self.lat,
-                "lon": self.lon,
-                "appid": "2c65a30ab78b9e5141f394914e138dac"
-            }
-            response = requests.get(url, params=params)
+# Prompt the user to enter the location (city) for weather information
+location = input("Enter the city for which you want to get weather information: ")
 
-            if response.status_code == 200:
-                self.weather_data = response.json()  # Store weather data as JSON.
-            else:
-                print("Failed to fetch weather data. Please check your coordinates and API key.")
-        except requests.exceptions.RequestException as e:
-            print(f"An error occurred: {e}")
+# Get weather data for the user-specified location
+try:
+    observation = owm.weather_at_place(location)
+    weather = observation.weather
 
-    def print_weather_info(self):
-        if self.weather_data:
-            main_data = self.weather_data.get("main", {})
-            temperature = main_data.get("temp")
-            temp_min = main_data.get("temp_min")
-            temp_max = main_data.get("temp_max")
+    # Get the weather data
+    temperature = weather.temperature('celsius')['temp']
+    humidity = weather.humidity
+    wind_speed = weather.wind()['speed']
+    weather_description = weather.detailed_status
 
-            print(f"Weather in {self.name}:")
-            print(f"- Temperature: {temperature}°C")
-            print(f"- Min Temperature: {temp_min}°C")
-            print(f"- Max Temperature: {temp_max}°C")
-        else:
-            print("Weather data is not available.")
+    # Print the weather data
+    print(f"Weather information for {location}:")
+    print(f"Temperature: {temperature}°C")
+    print(f"Humidity: {humidity}%")
+    print(f"Wind speed: {wind_speed} m/s")
+    print(f"Weather description: {weather_description}")
 
-# Example usage:
-if __name__ == "__main__":
-    london = CityWeather("London", 51.509865, -0.118092)
-    london.print_weather_info()  # Print weather information for London.
-
-    kilifi = CityWeather("Kilifi", -3.563, 39.644)
-    kilifi.print_weather_info()  # Print weather information for Kilifi.
+except pyowm.exceptions.api_response_error.NotFoundError:
+    print(f"Sorry, weather information for {location} could not be found.")
+except Exception as e:
+    print(f"An error occurred: {str(e)}")
