@@ -1,30 +1,56 @@
-import pyowm
+import os
+from pyowm import OWM
+from pyowm.commons.exceptions import NotFoundError, APIRequestError
 
-# Replace "YOUR_API_KEY" with your actual OpenWeatherMap API key
-owm = pyowm.OWM("YOUR_API_KEY")
 
-# Prompt the user to enter the location (city) for weather information
-location = input("Enter the city for which you want to get weather information: ")
+def get_weather(api_key, city):
+    """
+    Fetch weather information for a given city.
+    Returns a dictionary with weather details.
+    """
+    owm = OWM(api_key)
+    mgr = owm.weather_manager()
 
-# Get weather data for the user-specified location
-try:
-    observation = owm.weather_at_place(location)
+    observation = mgr.weather_at_place(city)
     weather = observation.weather
 
-    # Get the weather data
-    temperature = weather.temperature('celsius')['temp']
-    humidity = weather.humidity
-    wind_speed = weather.wind()['speed']
-    weather_description = weather.detailed_status
+    return {
+        "temperature": weather.temperature("celsius")["temp"],
+        "humidity": weather.humidity,
+        "wind_speed": weather.wind()["speed"],
+        "description": weather.detailed_status
+    }
 
-    # Print the weather data
-    print(f"Weather information for {location}:")
-    print(f"Temperature: {temperature}°C")
-    print(f"Humidity: {humidity}%")
-    print(f"Wind speed: {wind_speed} m/s")
-    print(f"Weather description: {weather_description}")
 
-except pyowm.exceptions.api_response_error.NotFoundError:
-    print(f"Sorry, weather information for {location} could not be found.")
-except Exception as e:
-    print(f"An error occurred: {str(e)}")
+def main():
+    print("🌤️ Weather Information Tool")
+
+    api_key = os.getenv("OWM_API_KEY")
+    if not api_key:
+        print("Error: API key not found. Please set the OWM_API_KEY environment variable.")
+        return
+
+    city = input("Enter a city name: ").strip()
+    if not city:
+        print("City name cannot be empty.")
+        return
+
+    try:
+        weather = get_weather(api_key, city)
+
+        print(f"\nWeather in {city}:")
+        print(f"Temperature: {weather['temperature']} °C")
+        print(f"Humidity: {weather['humidity']}%")
+        print(f"Wind Speed: {weather['wind_speed']} m/s")
+        print(f"Description: {weather['description']}")
+
+    except NotFoundError:
+        print(f"Weather information for '{city}' was not found.")
+    except APIRequestError:
+        print("Failed to connect to the weather service. Please try again later.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+
+
+if __name__ == "__main__":
+    main()
